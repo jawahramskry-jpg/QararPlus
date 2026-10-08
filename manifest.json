@@ -1,0 +1,12 @@
+{
+  "name": "قرار بلس",
+  "short_name": "قرار بلس",
+  "description": "نظام ذكي لإدارة وتحسين أداء الشركات",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#172554",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl"
+}

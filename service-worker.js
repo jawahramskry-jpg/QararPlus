@@ -1,57 +1,72 @@
-const CACHE_NAME = "qarar-plus-v1";
+
+const CACHE_NAME = "qarar-plus-v2";
 
 const FILES_TO_CACHE = [
-    "./",
-    "./index.html",
-    "./manifest.json"
+  "./",
+  "./index.html",
+  "./manifest.json"
 ];
 
 self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(FILES_TO_CACHE))
+  );
 
-    event.waitUntil(
-
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(FILES_TO_CACHE);
-            })
-
-    );
-
+  self.skipWaiting();
 });
-
-
-self.addEventListener("fetch", event => {
-
-    event.respondWith(
-
-        caches.match(event.request)
-            .then(response => {
-
-                return response || fetch(event.request);
-
-            })
-
-    );
-
-});
-
 
 self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key =>
+            key.startsWith("qarar-plus-") &&
+            key !== CACHE_NAME
+          )
+          .map(key => caches.delete(key))
+      )
+    )
+  );
 
-    event.waitUntil(
+  self.clients.claim();
+});
 
-        caches.keys().then(keys => {
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
 
-            return Promise.all(
+  const url = new URL(event.request.url);
 
-                keys
-                    .filter(key => key !== CACHE_NAME)
-                    .map(key => caches.delete(key))
+  if (url.origin !== self.location.origin) return;
 
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+
+            caches.open(CACHE_NAME).then(cache =>
+              cache.put("./index.html", copy)
             );
+          }
 
+          return response;
         })
-
+        .catch(async () =>
+          (await caches.match(event.request)) ||
+          (await caches.match("./index.html")) ||
+          Response.error()
+        )
     );
 
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(cached =>
+      cached || fetch(event.request)
+    )
+  );
 });

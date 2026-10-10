@@ -5,22 +5,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#153963">
-  <meta name="description" content="قرار بلس - نظام ذكي لإدارة وتحسين أداء المنشآت والمشاريع">
+  <meta name="description" content="قرار بلس: نظام ذكي لإدارة وتحسين أداء المنشآت والمشاريع">
   <link rel="manifest" href="./manifest.json">
   <title>قرار بلس | QARAR PLUS</title>
 
   <style>
     :root {
       --blue: #153963;
-      --blue2: #204f7d;
+      --blue-light: #244f7d;
       --green: #159b78;
-      --green-light: #e5f6ef;
-      --bg: #f4f7fa;
+      --green-light: #e7f6f0;
+      --bg: #f4f7fb;
       --white: #ffffff;
-      --text: #203348;
-      --muted: #748396;
-      --border: #e5ebf1;
-      --shadow: 0 5px 24px rgba(21,57,99,.06);
+      --text: #20334b;
+      --muted: #7b8ba0;
+      --border: #e5ebf2;
+      --red: #d95362;
+      --shadow: 0 5px 22px rgba(21, 57, 99, .055);
     }
 
     * { box-sizing: border-box; }
@@ -35,764 +36,779 @@
     button, input, select, textarea { font: inherit; }
     button { cursor: pointer; }
 
-    .topbar {
-      background: var(--blue);
-      color: white;
-      padding: 17px 26px;
+    .app {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      min-height: 100vh;
     }
-
-    .brand { display: flex; align-items: center; gap: 12px; }
-
-    .brand-mark {
-      width: 45px;
-      height: 45px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: linear-gradient(135deg, var(--green), #25b69a);
-      color: white;
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    .brand-name { font-size: 23px; font-weight: bold; }
-    .brand-en { font-size: 10px; letter-spacing: 4px; margin-top: 4px; }
-    .tagline { color: #d9e8f4; font-size: 12px; margin-top: 5px; }
-    .top-label { font-size: 12px; color: #d9e8f4; }
-
-    .layout { display: flex; min-height: calc(100vh - 79px); }
 
     .sidebar {
-      width: 235px;
+      width: 245px;
       flex-shrink: 0;
-      background: white;
-      border-left: 1px solid var(--border);
-      padding: 23px 13px;
+      background: var(--blue);
+      color: white;
+      padding: 23px 15px;
+      display: flex;
+      flex-direction: column;
     }
 
-    .menu-caption {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 7px 25px;
+      border-bottom: 1px solid rgba(255,255,255,.13);
+    }
+
+    .brand img {
+      width: 49px;
+      height: 49px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: white;
+    }
+
+    .brand-name { font-size: 20px; font-weight: bold; }
+    .brand-en {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #75d7b7;
+      margin-top: 5px;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .nav-label {
+      color: #a9bfd6;
       font-size: 11px;
-      color: var(--muted);
-      padding: 0 12px;
-      margin-bottom: 12px;
+      margin: 25px 10px 10px;
     }
 
     .nav-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #d9e5f2;
+      padding: 12px 13px;
+      text-align: right;
       display: flex;
       align-items: center;
       gap: 11px;
-      width: 100%;
-      border: 0;
-      background: transparent;
-      color: #5a6b7d;
-      text-align: right;
-      padding: 13px 14px;
-      border-radius: 10px;
-      margin-bottom: 5px;
-      font-size: 14px;
+      margin: 3px 0;
+      font-size: 13px;
+      transition: .2s;
     }
 
-    .nav-btn:hover { background: #f0f7f6; }
+    .nav-btn:hover, .nav-btn.active {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
     .nav-btn.active {
-      background: #e7f5f0;
-      color: var(--green);
-      font-weight: bold;
-      border-right: 3px solid var(--green);
+      border-right: 3px solid #31c49a;
     }
 
-    main { flex: 1; min-width: 0; padding: 28px; }
+    .nav-icon { width: 21px; text-align: center; font-size: 17px; }
 
-    .page { display: none; }
-    .page.active { display: block; }
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 18px 8px 0;
+      color: #b8cce0;
+      font-size: 11px;
+      line-height: 1.9;
+    }
 
-    .page-heading {
+    .main { flex: 1; min-width: 0; }
+
+    .topbar {
+      height: 78px;
+      padding: 0 30px;
+      background: white;
+      border-bottom: 1px solid var(--border);
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-start;
       gap: 15px;
-      margin-bottom: 24px;
     }
 
-    h1 { color: var(--blue); font-size: 25px; margin: 0 0 9px; }
-    h2 { font-size: 17px; color: var(--blue); margin: 0 0 18px; }
-    h3 { font-size: 15px; margin: 0 0 9px; color: var(--blue); }
-    p { line-height: 1.8; }
-    .muted { color: var(--muted); font-size: 13px; margin: 0; }
+    .page-title { font-size: 19px; font-weight: bold; color: var(--blue); }
+    .page-subtitle { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-    .pill {
-      display: inline-block;
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+
+    .status {
+      color: var(--green);
       background: var(--green-light);
-      color: #08795b;
-      padding: 7px 11px;
       border-radius: 20px;
+      padding: 8px 12px;
       font-size: 11px;
       white-space: nowrap;
     }
 
-    .hero {
-      background: linear-gradient(115deg, #153963, #206b80);
-      border-radius: 18px;
-      padding: 27px;
+    .content { padding: 27px 30px 40px; max-width: 1500px; margin: auto; }
+
+    .welcome {
+      background: linear-gradient(115deg, #153963, #21618a);
       color: white;
-      margin-bottom: 23px;
+      padding: 27px 28px;
+      border-radius: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
       position: relative;
       overflow: hidden;
+      margin-bottom: 24px;
     }
 
-    .hero::after {
+    .welcome::after {
       content: "";
       position: absolute;
-      width: 190px;
-      height: 190px;
-      border: 30px solid rgba(44,201,157,.15);
+      width: 210px;
+      height: 210px;
+      border: 35px solid rgba(40,190,145,.12);
       border-radius: 50%;
-      left: -45px;
-      top: -80px;
+      left: -55px;
+      top: -95px;
+      pointer-events: none;
     }
 
-    .hero h2 { color: white; font-size: 23px; margin-bottom: 10px; }
-    .hero p { color: #d9e8f4; font-size: 13px; margin: 0 0 18px; }
-    .hero strong { color: #6ce0b5; }
-    .hero-content { position: relative; z-index: 1; }
+    .welcome h2 { font-size: 22px; margin: 0 0 10px; }
+    .welcome p { font-size: 12px; color: #d2e2ef; line-height: 1.9; margin: 0; }
+    .welcome-mark { color: #6cdbb4; font-size: 38px; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 27px 0 15px;
+    }
+
+    .section-heading h2 { font-size: 16px; margin: 0; color: var(--blue); }
+    .section-heading p { color: var(--muted); font-size: 11px; margin: 6px 0 0; }
 
     .btn {
       border: 0;
-      background: var(--green);
-      color: white;
-      padding: 11px 17px;
       border-radius: 9px;
-      font-size: 13px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: bold;
     }
 
-    .btn:hover { filter: brightness(.95); }
-    .btn-blue { background: var(--blue); }
-    .btn-light { background: #eaf1f7; color: var(--blue); }
-    .btn-small { padding: 8px 12px; }
+    .btn-primary { background: var(--green); color: white; }
+    .btn-primary:hover { background: #108363; }
+    .btn-outline { background: white; color: var(--blue); border: 1px solid var(--border); }
+    .btn-blue { background: var(--blue); color: white; }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 15px;
-      margin-bottom: 22px;
     }
 
-    .stat, .panel {
+    .card {
       background: white;
       border: 1px solid var(--border);
-      border-radius: 15px;
+      border-radius: 13px;
+      padding: 19px;
       box-shadow: var(--shadow);
+      min-width: 0;
     }
 
-    .stat { padding: 19px; min-width: 0; }
-    .stat-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .stat-label { font-size: 12px; color: var(--muted); }
     .stat-icon {
-      display: grid;
-      place-items: center;
-      width: 37px;
-      height: 37px;
-      background: #e8f5f2;
-      border-radius: 10px;
-      color: var(--green);
-      font-size: 19px;
+      width: 39px; height: 39px; display: grid; place-items: center;
+      border-radius: 11px; font-size: 19px;
     }
 
-    .stat-value {
-      font-size: 23px;
-      font-weight: bold;
-      color: var(--blue);
-      margin: 17px 0 8px;
-      overflow-wrap: anywhere;
-    }
+    .icon-blue { background: #eaf1fa; }
+    .icon-green { background: #e5f6ef; }
+    .icon-orange { background: #fff3e5; }
+    .icon-red { background: #ffedef; }
 
-    .stat-note { font-size: 11px; color: var(--muted); }
-    .green-text { color: var(--green); }
-    .blue-text { color: var(--blue); }
+    .stat-value { font-size: 25px; font-weight: bold; color: var(--blue); margin-top: 18px; }
+    .stat-foot { font-size: 11px; margin-top: 10px; color: var(--muted); line-height: 1.7; }
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
 
     .grid-two {
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-      gap: 18px;
-      margin-bottom: 20px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+      gap: 17px;
+      margin-top: 20px;
     }
 
-    .panel { padding: 22px; min-width: 0; margin-bottom: 18px; }
+    .panel-title { font-size: 14px; font-weight: bold; color: var(--blue); margin-bottom: 7px; }
+    .panel-desc { font-size: 11px; color: var(--muted); line-height: 1.8; }
 
-    .panel-head {
+    .chart {
+      height: 180px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 17px;
+      align-items: end;
+      justify-content: space-around;
+      gap: 12px;
+      padding: 18px 6px 0;
+      border-bottom: 1px solid var(--border);
+      margin-top: 12px;
     }
 
-    .panel-head h2 { margin: 0; }
+    .bar-group { height: 100%; flex: 1; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 8px; }
+    .bar-pair { height: 135px; display: flex; align-items: end; gap: 5px; }
+    .bar { width: 15px; border-radius: 5px 5px 0 0; background: var(--green); min-height: 5px; }
+    .bar.old { background: #c9d8e8; }
+    .bar-label { color: var(--muted); font-size: 10px; }
+
+    .legend { display: flex; gap: 17px; margin-top: 14px; font-size: 10px; color: var(--muted); }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 5px; }
+    .dot-green { background: var(--green); }
+    .dot-grey { background: #c9d8e8; }
 
     .insight {
-      padding: 15px;
+      background: #f0faf6;
+      border: 1px solid #d8f0e6;
       border-radius: 11px;
-      background: #eff8f5;
-      border-right: 4px solid var(--green);
-      margin-bottom: 12px;
+      padding: 15px;
+      margin-top: 15px;
     }
 
-    .insight.warning {
-      background: #fff7e8;
-      border-right-color: #d89b35;
+    .insight-title { font-weight: bold; color: #137b60; font-size: 12px; margin-bottom: 8px; }
+    .insight p { color: #4b6e65; font-size: 11px; line-height: 1.9; margin: 0; }
+
+    .recommendation {
+      display: flex; gap: 11px; padding: 13px 0;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
     }
+    .recommendation:last-child { border-bottom: 0; padding-bottom: 0; }
+    .rec-icon { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: var(--green-light); flex-shrink: 0; }
+    .rec-title { font-size: 12px; font-weight: bold; margin-bottom: 6px; }
+    .rec-desc { font-size: 11px; color: var(--muted); line-height: 1.8; }
 
-    .insight p { margin: 5px 0 0; color: #5e7080; font-size: 12px; }
-    .insight h3 { margin-bottom: 5px; }
+    .quick-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+    .quick-card { text-align: right; border: 1px solid var(--border); background: white; border-radius: 12px; padding: 17px; color: var(--text); }
+    .quick-card:hover { border-color: #8acfb8; transform: translateY(-1px); }
+    .quick-card .q-icon { font-size: 23px; margin-bottom: 12px; }
+    .quick-card strong { display: block; font-size: 12px; color: var(--blue); margin-bottom: 7px; }
+    .quick-card span { color: var(--muted); font-size: 10px; line-height: 1.8; }
 
-    .bar-row { margin: 19px 0; }
-    .bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 9px; }
-    .bar-track { height: 8px; background: #edf1f5; border-radius: 20px; overflow: hidden; }
-    .bar-fill { height: 100%; background: var(--green); border-radius: 20px; }
-    .bar-fill.blue { background: var(--blue2); }
+    .page { display: none; }
+    .page.active { display: block; }
 
-    .table-wrap { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 480px; }
-    th, td { text-align: right; padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
-    th { color: var(--muted); background: #f8fafc; font-weight: normal; }
-    td { color: #405468; }
-    tr:last-child td { border-bottom: 0; }
+    .table-wrap { overflow-x: auto; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; min-width: 450px; }
+    th, td { text-align: right; padding: 13px 10px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    th { color: var(--muted); font-weight: normal; background: #f9fbfd; }
+    td { color: var(--text); }
+    .tag { background: var(--green-light); color: var(--green); border-radius: 20px; padding: 5px 9px; font-size: 10px; }
 
-    .status {
-      display: inline-block;
-      border-radius: 20px;
-      padding: 6px 9px;
-      font-size: 10px;
-      background: var(--green-light);
-      color: #08795b;
-    }
-
-    .status.warn { background: #fff2d9; color: #97620c; }
-    .status.info { background: #eaf1f9; color: var(--blue); }
-
-    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
-    .field { display: flex; flex-direction: column; gap: 7px; }
-    .field label { font-size: 12px; color: #506276; }
+    .form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; margin-top: 18px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label { font-size: 12px; color: var(--text); }
     .field input, .field select, .field textarea {
-      width: 100%;
-      border: 1px solid #dce5ed;
-      border-radius: 9px;
-      background: white;
-      padding: 12px;
-      outline: none;
-      color: var(--text);
+      border: 1px solid var(--border); border-radius: 9px; padding: 12px;
+      background: white; width: 100%; color: var(--text);
     }
+    .field textarea { min-height: 85px; resize: vertical; }
+    .field.full { grid-column: 1/-1; }
+    .form-actions { display: flex; gap: 10px; margin-top: 17px; }
 
-    .field input:focus, .field select:focus, .field textarea:focus {
-      border-color: var(--green);
-    }
+    .empty { padding: 25px; color: var(--muted); font-size: 12px; text-align: center; }
+    .notice { background: #fff8e9; border: 1px solid #f3e2b6; color: #826629; border-radius: 10px; padding: 13px; font-size: 11px; line-height: 1.9; margin-top: 16px; }
 
-    .form-actions { display: flex; gap: 9px; margin-top: 17px; flex-wrap: wrap; }
-    .empty { text-align: center; padding: 25px; color: var(--muted); font-size: 13px; }
-    .footer { text-align: center; color: var(--muted); font-size: 11px; padding: 22px 0 5px; }
+    .mobile-menu { display: none; border: 0; background: transparent; color: var(--blue); font-size: 23px; }
 
     @media (max-width: 1050px) {
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid-two { grid-template-columns: 1fr; }
+      .sidebar { width: 215px; }
+      .content { padding: 22px 20px 35px; }
+      .topbar { padding: 0 20px; }
+      .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .quick-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
 
-    @media (max-width: 700px) {
-      .topbar { padding: 13px 15px; }
-      .brand-name { font-size: 20px; }
-      .top-label { display: none; }
-      .layout { display: block; }
+    @media (max-width: 720px) {
+      .app { display: block; }
       .sidebar {
-        width: 100%;
-        display: flex;
-        gap: 5px;
-        overflow-x: auto;
-        padding: 9px;
-        border-left: 0;
-        border-bottom: 1px solid var(--border);
+        position: fixed; z-index: 20; top: 0; right: 0; bottom: 0;
+        width: 265px; transform: translateX(105%); transition: transform .25s;
+        box-shadow: -10px 0 30px rgba(0,0,0,.15);
       }
-      .menu-caption { display: none; }
-      .nav-btn {
-        width: auto;
-        flex-shrink: 0;
-        margin: 0;
-        padding: 11px 13px;
-        font-size: 12px;
-        border-right: 0;
-      }
-      .nav-btn.active { border-right: 0; border-bottom: 3px solid var(--green); }
-      main { padding: 17px 13px; }
-      .hero { padding: 21px 18px; }
-      .hero h2 { font-size: 20px; }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu { display: block; }
+      .topbar { height: 70px; padding: 0 15px; }
+      .page-title { font-size: 16px; }
+      .page-subtitle { font-size: 10px; }
+      .status { display: none; }
+      .content { padding: 17px 13px 30px; }
+      .welcome { padding: 21px 18px; }
+      .welcome h2 { font-size: 19px; }
+      .welcome p { font-size: 11px; }
+      .welcome-mark { font-size: 28px; }
       .stats { gap: 10px; }
-      .stat { padding: 14px; }
-      .stat-value { font-size: 20px; }
-      .page-heading { margin-bottom: 17px; }
-      h1 { font-size: 22px; }
-      .panel { padding: 16px; }
+      .card { padding: 14px; }
+      .stat-value { font-size: 21px; }
+      .stat-label { font-size: 11px; }
+      .stat-icon { width: 33px; height: 33px; font-size: 16px; }
+      .grid-two { grid-template-columns: 1fr; gap: 13px; }
+      .quick-grid { gap: 10px; }
+      .quick-card { padding: 13px; }
+      .section-heading { margin-top: 23px; }
       .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
     }
 
-    @media (max-width: 370px) {
+    @media (max-width: 360px) {
       .stats { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 
 <body>
-<header class="topbar">
-  <div class="brand">
-    <div class="brand-mark">ق+</div>
-    <div>
-      <div class="brand-name">قرار بلس</div>
-      <div class="brand-en">QARAR PLUS</div>
-      <div class="tagline">بياناتك .. قراراتك الأفضل</div>
-    </div>
-  </div>
-  <div class="top-label">نظام ذكي لإدارة وتحسين أداء المنشآت</div>
-</header>
+<div class="app">
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="menu-caption">القائمة الرئيسية</div>
-    <button class="nav-btn active" data-page="home">⌂ الرئيسية</button>
-    <button class="nav-btn" data-page="management">▤ الإدارة والمالية</button>
-    <button class="nav-btn" data-page="operations">⚙ التشغيل والهندسة</button>
-    <button class="nav-btn" data-page="analytics">✧ التحليلات الذكية</button>
-    <button class="nav-btn" data-page="decisions">◎ مركز القرار</button>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+     <img src="./logo.jpeg" alt="شعار قرار بلس">
+      <div>
+        <div class="brand-name">قرار بلس</div>
+        <div class="brand-en">QARAR PLUS</div>
+      </div>
+    </div>
+
+    <div class="nav-label">القائمة الرئيسية</div>
+    <button class="nav-btn active" data-page="dashboard"><span class="nav-icon">▦</span>لوحة التحكم</button>
+    <button class="nav-btn" data-page="management"><span class="nav-icon">▤</span>الإدارة والمالية</button>
+    <button class="nav-btn" data-page="engineering"><span class="nav-icon">⚙</span>الهندسة والتشغيل</button>
+    <button class="nav-btn" data-page="inventory"><span class="nav-icon">▣</span>المخزون والمشتريات</button>
+    <button class="nav-btn" data-page="employees"><span class="nav-icon">♙</span>الموظفون والإنتاجية</button>
+
+    <div class="nav-label">التحليل والقرارات</div>
+    <button class="nav-btn" data-page="insights"><span class="nav-icon">✧</span>التحليلات الذكية</button>
+    <button class="nav-btn" data-page="reports"><span class="nav-icon">▥</span>التقارير</button>
+
+    <div class="sidebar-bottom">
+      <div>قرار بلس — نسخة تجريبية</div>
+      <div>بياناتك .. قراراتك الأفضل</div>
+    </div>
   </aside>
 
-  <main>
-    <section class="page active" id="home">
-      <div class="page-heading">
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-menu" id="menuBtn" aria-label="فتح القائمة">☰</button>
         <div>
-          <h1>لوحة التحكم</h1>
-          <p class="muted">نظرة شاملة على أداء المنشأة ومؤشرات التشغيل</p>
-        </div>
-        <span class="pill">● النسخة التجريبية</span>
-      </div>
-
-      <div class="hero">
-        <div class="hero-content">
-          <h2>أهلاً بك في <strong>قرار بلس</strong></h2>
-          <p>اربط البيانات الإدارية والهندسية لتحصل على رؤية أوضح وقرارات أفضل.</p>
-          <button class="btn" data-goto="analytics">استعرض التحليلات ←</button>
+          <div class="page-title" id="headerTitle">لوحة التحكم</div>
+          <div class="page-subtitle">نظرة عامة على أداء المنشأة</div>
         </div>
       </div>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-top"><span class="muted">الإيرادات</span><span class="stat-icon">↗</span></div>
-          <div class="stat-value">18,500 <small>ر.ع</small></div>
-          <div class="stat-note">بيانات تجريبية للعرض</div>
-        </div>
-        <div class="stat">
-          <div class="stat-top"><span class="muted">المصروفات</span><span class="stat-icon">▤</span></div>
-          <div class="stat-value">11,200 <small>ر.ع</small></div>
-          <div class="stat-note">بيانات تجريبية للعرض</div>
-        </div>
-        <div class="stat">
-          <div class="stat-top"><span class="muted">استهلاك الكهرباء</span><span class="stat-icon">ϟ</span></div>
-          <div class="stat-value">8,420 <small>kWh</small></div>
-          <div class="stat-note">قراءة افتراضية</div>
-        </div>
-        <div class="stat">
-          <div class="stat-top"><span class="muted">التوفير المحتمل</span><span class="stat-icon">♧</span></div>
-          <div class="stat-value green-text">35 <small>ر.ع</small></div>
-          <div class="stat-note">تقدير توضيحي غير مضمون</div>
-        </div>
+      <div class="top-actions">
+        <span class="status">● النسخة التجريبية</span>
+        <button class="btn btn-primary" id="addExpenseTop">+ إضافة مصروف</button>
       </div>
+    </header>
 
-      <div class="grid-two">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>مؤشرات الأداء</h2>
-            <span class="pill">مثال توضيحي</span>
+    <div class="content">
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome">
+          <div>
+            <h2>أهلًا بك في قرار بلس</h2>
+            <p>بيانات منشأتك تساعدك على فهم الأداء،<br>وتحديد فرص تحسين الكفاءة وتقليل التكاليف.</p>
           </div>
-          <div class="bar-row">
-            <div class="bar-label"><span>الإيرادات</span><strong>82%</strong></div>
-            <div class="bar-track"><div class="bar-fill" style="width:82%"></div></div>
+          <div class="welcome-mark">↗</div>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <h2>ملخص الأداء</h2>
+            <p>الأرقام التجريبية تتغير عند إضافة بياناتك.</p>
           </div>
-          <div class="bar-row">
-            <div class="bar-label"><span>كفاءة التشغيل</span><strong>74%</strong></div>
-            <div class="bar-track"><div class="bar-fill blue" style="width:74%"></div></div>
+          <button class="btn btn-outline" id="goReports">عرض التقارير ←</button>
+        </div>
+
+        <div class="stats">
+          <div class="card">
+            <div class="stat-top"><span class="stat-label">إجمالي الإيرادات</span><span class="stat-icon icon-blue">↗</span></div>
+            <div class="stat-value" id="revenueValue">1,850 <small style="font-size:12px">ر.ع.</small></div>
+            <div class="stat-foot">قيمة تجريبية قابلة للتعديل لاحقًا</div>
           </div>
-          <div class="bar-row">
-            <div class="bar-label"><span>التحكم في المصروفات</span><strong>68%</strong></div>
-            <div class="bar-track"><div class="bar-fill" style="width:68%"></div></div>
+          <div class="card">
+            <div class="stat-top"><span class="stat-label">إجمالي المصروفات</span><span class="stat-icon icon-orange">↘</span></div>
+            <div class="stat-value" id="expenseValue">720 <small style="font-size:12px">ر.ع.</small></div>
+            <div class="stat-foot">تشمل المصروفات التي تضيفينها هنا</div>
+          </div>
+          <div class="card">
+            <div class="stat-top"><span class="stat-label">استهلاك الكهرباء</span><span class="stat-icon icon-green">ϟ</span></div>
+            <div class="stat-value">1,240 <small style="font-size:12px">ك.و.س</small></div>
+            <div class="stat-foot">مثال توضيحي — أدخلي قراءاتك الفعلية لاحقًا</div>
+          </div>
+          <div class="card">
+            <div class="stat-top"><span class="stat-label">فرص التوفير</span><span class="stat-icon icon-red">✧</span></div>
+            <div class="stat-value">22 <small style="font-size:12px">ر.ع.</small></div>
+            <div class="stat-foot">تقدير توضيحي وليس نتيجة تحليل فعلي</div>
           </div>
         </div>
 
-        <div class="panel">
-          <div class="panel-head"><h2>رؤى قرار بلس</h2><span>✧</span></div>
-          <div class="insight warning">
-            <h3>⚡ مراجعة استهلاك الطاقة</h3>
-            <p>تحققي من ساعات التشغيل وقراءات الفواتير قبل تحديد سبب أي زيادة.</p>
+        <div class="grid-two">
+          <div class="card">
+            <div class="panel-title">مقارنة استهلاك الكهرباء</div>
+            <div class="panel-desc">مثال بصري للمقارنة بين فترتين — ليست بيانات منشأتك الفعلية.</div>
+            <div class="chart">
+              <div class="bar-group"><div class="bar-pair"><div class="bar old" style="height:48%"></div><div class="bar" style="height:62%"></div></div><div class="bar-label">الأسبوع 1</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar old" style="height:55%"></div><div class="bar" style="height:68%"></div></div><div class="bar-label">الأسبوع 2</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar old" style="height:45%"></div><div class="bar" style="height:72%"></div></div><div class="bar-label">الأسبوع 3</div></div>
+              <div class="bar-group"><div class="bar-pair"><div class="bar old" style="height:52%"></div><div class="bar" style="height:87%"></div></div><div class="bar-label">الأسبوع 4</div></div>
+            </div>
+            <div class="legend"><span><i class="dot dot-green"></i>الفترة الحالية</span><span><i class="dot dot-grey"></i>الفترة السابقة</span></div>
           </div>
-          <div class="insight">
-            <h3>⚙ متابعة الصيانة</h3>
-            <p>راجعي مواعيد صيانة المعدات وسجلي الأعطال لتحديد أولويات العمل.</p>
+
+          <div class="card">
+            <div class="panel-title">توصيات للتحسين</div>
+            <div class="panel-desc">أمثلة على القرارات التي يمكن أن يدعمها النظام بعد إدخال البيانات.</div>
+            <div class="recommendation">
+              <div class="rec-icon">⚙</div>
+              <div><div class="rec-title">جدولة صيانة المعدات</div><div class="rec-desc">سجّلي ساعات التشغيل والأعطال لمقارنة الأداء وتحديد موعد الفحص المناسب.</div></div>
+            </div>
+            <div class="recommendation">
+              <div class="rec-icon">ϟ</div>
+              <div><div class="rec-title">مراجعة استهلاك الكهرباء</div><div class="rec-desc">قارني القراءات الفعلية بالفترات السابقة قبل اتخاذ قرار بتعديل التشغيل.</div></div>
+            </div>
+            <div class="recommendation">
+              <div class="rec-icon">▤</div>
+              <div><div class="rec-title">مراقبة المصروفات</div><div class="rec-desc">سجّلي المصروفات بانتظام لمعرفة البنود الأعلى تكلفة.</div></div>
+            </div>
           </div>
-          <p class="muted">هذه أمثلة إرشادية وليست تحليلات فعلية لبيانات شركتك.</p>
         </div>
-      </div>
 
-      <div class="panel">
-        <h2>آخر التنبيهات</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>التنبيه</th><th>القسم</th><th>الأولوية</th><th>الإجراء</th></tr></thead>
-            <tbody>
-              <tr><td>مراجعة استهلاك الكهرباء</td><td>الهندسة</td><td><span class="status warn">متوسطة</span></td><td>مراجعة القراءات</td></tr>
-              <tr><td>تحديث سجل المصروفات</td><td>الإدارة</td><td><span class="status info">عادية</span></td><td>إدخال البيانات</td></tr>
-              <tr><td>مراجعة جدول الصيانة</td><td>التشغيل</td><td><span class="status warn">متوسطة</span></td><td>تحديد الموعد</td></tr>
-            </tbody>
-          </table>
+        <div class="section-heading">
+          <div><h2>الوصول السريع</h2><p>أضيفي البيانات الأساسية لمنشأتك.</p></div>
         </div>
-      </div>
-    </section>
+        <div class="quick-grid">
+          <button class="quick-card" data-go="management"><div class="q-icon">💰</div><strong>المصاريف والإيرادات</strong><span>سجّلي العمليات المالية</span></button>
+          <button class="quick-card" data-go="engineering"><div class="q-icon">⚙️</div><strong>التشغيل والصيانة</strong><span>المعدات والأعطال والطاقة</span></button>
+          <button class="quick-card" data-go="inventory"><div class="q-icon">📦</div><strong>المخزون والمشتريات</strong><span>الأصناف والكميات</span></button>
+          <button class="quick-card" data-go="employees"><div class="q-icon">👥</div><strong>الموظفون</strong><span>بيانات الفريق والإنتاجية</span></button>
+        </div>
+      </section>
 
-    <section class="page" id="management">
-      <div class="page-heading">
-        <div><h1>الإدارة والمالية</h1><p class="muted">إدارة المصروفات والموارد المالية</p></div>
-        <span class="pill">البيانات التجريبية</span>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><div class="muted">الموظفون</div><div class="stat-value">42</div><div class="stat-note">عدد افتراضي</div></div>
-        <div class="stat"><div class="muted">المشتريات</div><div class="stat-value">4,250 <small>ر.ع</small></div><div class="stat-note">قيمة افتراضية</div></div>
-        <div class="stat"><div class="muted">الموردون</div><div class="stat-value">18</div><div class="stat-note">عدد افتراضي</div></div>
-        <div class="stat"><div class="muted">المخزون</div><div class="stat-value">7,850 <small>ر.ع</small></div><div class="stat-note">قيمة افتراضية</div></div>
-      </div>
-
-      <div class="panel">
-        <h2>إضافة مصروف جديد</h2>
-        <form id="expense-form">
-          <div class="form-grid">
-            <div class="field"><label for="expense-name">اسم المصروف</label><input id="expense-name" required placeholder="مثال: صيانة المعدات"></div>
-            <div class="field"><label for="expense-amount">المبلغ بالريال العماني</label><input id="expense-amount" type="number" min="0.001" step="0.001" required placeholder="مثال: 120"></div>
-            <div class="field"><label for="expense-category">التصنيف</label><select id="expense-category"><option>تشغيل</option><option>صيانة</option><option>مشتريات</option><option>رواتب</option><option>أخرى</option></select></div>
-            <div class="field"><label for="expense-date">التاريخ</label><input id="expense-date" type="date" required></div>
+      <section class="page" id="page-management">
+        <div class="section-heading">
+          <div><h2>الإدارة والمالية</h2><p>تسجيل ومتابعة الإيرادات والمصروفات.</p></div>
+          <button class="btn btn-primary" id="addExpensePage">+ إضافة مصروف</button>
+        </div>
+        <div class="card">
+          <div class="panel-title">إضافة عملية مالية</div>
+          <form id="expenseForm">
+            <div class="form-grid">
+              <div class="field"><label for="expenseName">وصف العملية</label><input id="expenseName" required placeholder="مثال: فاتورة الكهرباء"></div>
+              <div class="field"><label for="expenseAmount">المبلغ (ر.ع.)</label><input id="expenseAmount" required type="number" min="0.001" step="0.001" placeholder="مثال: 35"></div>
+              <div class="field"><label for="expenseType">نوع العملية</label><select id="expenseType"><option value="expense">مصروف</option><option value="revenue">إيراد</option></select></div>
+              <div class="field"><label for="expenseDate">التاريخ</label><input id="expenseDate" type="date" required></div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">حفظ العملية</button></div>
+          </form>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="panel-title">العمليات المسجلة</div>
+          <div class="table-wrap">
+            <table><thead><tr><th>الوصف</th><th>النوع</th><th>التاريخ</th><th>المبلغ</th></tr></thead><tbody id="expenseRows"></tbody></table>
           </div>
-          <div class="form-actions"><button class="btn" type="submit">حفظ المصروف</button></div>
-        </form>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head"><h2>سجل المصروفات المضافة</h2><button class="btn btn-light btn-small" id="export-expenses">تصدير CSV</button></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>المصروف</th><th>التصنيف</th><th>المبلغ</th><th>التاريخ</th></tr></thead>
-            <tbody id="expense-rows"><tr><td colspan="4" class="empty">لم تتم إضافة مصروفات بعد.</td></tr></tbody>
-          </table>
+          <div class="empty" id="noExpenses">لم تضيفي أي عمليات بعد.</div>
         </div>
-        <p class="muted">المصروفات التي تضيفينها تُحفظ في هذا المتصفح على هذا الجهاز فقط في هذه النسخة التجريبية.</p>
-      </div>
-    </section>
+        <div class="notice">هذه نسخة تجريبية تحفظ العمليات على الجهاز نفسه فقط. لا تستخدميها بعد لحفظ بيانات مالية حقيقية أو حساسة.</div>
+      </section>
 
-    <section class="page" id="operations">
-      <div class="page-heading"><div><h1>التشغيل والهندسة</h1><p class="muted">متابعة الطاقة والمعدات والصيانة</p></div><span class="pill">نموذج تجريبي</span></div>
-
-      <div class="stats">
-        <div class="stat"><div class="muted">الكهرباء</div><div class="stat-value">8,420 <small>kWh</small></div><div class="stat-note">قراءة افتراضية</div></div>
-        <div class="stat"><div class="muted">المياه</div><div class="stat-value">1,240 <small>m³</small></div><div class="stat-note">قراءة افتراضية</div></div>
-        <div class="stat"><div class="muted">المعدات</div><div class="stat-value">12</div><div class="stat-note">عدد افتراضي</div></div>
-        <div class="stat"><div class="muted">الصيانة المتأخرة</div><div class="stat-value">2</div><div class="stat-note">عدد افتراضي</div></div>
-      </div>
-
-      <div class="panel">
-        <h2>سجل المعدات</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>المعدة</th><th>الحالة</th><th>ساعات التشغيل</th><th>آخر صيانة</th></tr></thead>
-            <tbody>
-              <tr><td>المعدة A</td><td><span class="status">جيدة</span></td><td>120 ساعة</td><td>منذ 15 يومًا</td></tr>
-              <tr><td>المعدة B</td><td><span class="status warn">تحتاج متابعة</span></td><td>185 ساعة</td><td>منذ 75 يومًا</td></tr>
-              <tr><td>المعدة C</td><td><span class="status">جيدة</span></td><td>95 ساعة</td><td>منذ 20 يومًا</td></tr>
-            </tbody>
-          </table>
+      <section class="page" id="page-engineering">
+        <div class="section-heading"><div><h2>الهندسة والتشغيل</h2><p>متابعة استهلاك الموارد وحالة المعدات.</p></div></div>
+        <div class="card">
+          <div class="panel-title">تسجيل قراءة تشغيلية</div>
+          <form id="engineeringForm">
+            <div class="form-grid">
+              <div class="field"><label for="readingType">نوع القراءة</label><select id="readingType"><option>استهلاك الكهرباء (ك.و.س)</option><option>استهلاك المياه (م³)</option><option>ساعات تشغيل المعدات</option><option>درجة الحرارة (°م)</option><option>الرطوبة (%)</option></select></div>
+              <div class="field"><label for="readingValue">قيمة القراءة</label><input id="readingValue" type="number" step="any" required placeholder="أدخلي القراءة"></div>
+              <div class="field"><label for="equipmentName">اسم الجهاز أو الموقع</label><input id="equipmentName" placeholder="مثال: جهاز التكييف"></div>
+              <div class="field"><label for="readingDate">التاريخ</label><input id="readingDate" type="date" required></div>
+              <div class="field full"><label for="readingNotes">ملاحظات</label><textarea id="readingNotes" placeholder="ملاحظات حول القراءة أو حالة الجهاز"></textarea></div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">حفظ القراءة</button></div>
+          </form>
         </div>
-        <p class="muted">المعدات والأرقام أعلاه افتراضية. لا يوجد اتصال فعلي بأجهزة أو حساسات في هذه المرحلة.</p>
-      </div>
-
-      <div class="panel">
-        <h2>تسجيل ملاحظة تشغيلية</h2>
-        <form id="operation-form">
-          <div class="form-grid">
-            <div class="field"><label for="machine">المعدة أو القسم</label><input id="machine" required placeholder="مثال: نظام التكييف"></div>
-            <div class="field"><label for="operation-type">نوع الملاحظة</label><select id="operation-type"><option>استهلاك طاقة</option><option>صيانة</option><option>عطل</option><option>مياه</option><option>أخرى</option></select></div>
-            <div class="field"><label for="operation-note">تفاصيل الملاحظة</label><textarea id="operation-note" required rows="3" placeholder="اكتبي الملاحظة هنا"></textarea></div>
-          </div>
-          <div class="form-actions"><button class="btn" type="submit">حفظ الملاحظة</button></div>
-        </form>
-        <div id="operation-list"></div>
-      </div>
-    </section>
-
-    <section class="page" id="analytics">
-      <div class="page-heading"><div><h1>التحليلات الذكية</h1><p class="muted">ربط مؤشرات الإدارة والتشغيل لدعم القرارات</p></div><span class="pill">تحليل توضيحي</span></div>
-
-      <div class="panel">
-        <h2>تحليل استهلاك الكهرباء</h2>
-        <div class="insight warning">
-          <h3>⚡ توجد زيادة افتراضية بنسبة 18%</h3>
-          <p>في هذا المثال، ارتفع الاستهلاك مقارنة بالفترة السابقة. يلزم إدخال قراءات حقيقية للتحقق من ذلك.</p>
+        <div class="card" style="margin-top:16px">
+          <div class="panel-title">سجل القراءات</div>
+          <div class="table-wrap"><table><thead><tr><th>نوع القراءة</th><th>الجهاز أو الموقع</th><th>القيمة</th><th>التاريخ</th></tr></thead><tbody id="readingRows"></tbody></table></div>
+          <div class="empty" id="noReadings">لم تسجّل قراءات بعد.</div>
         </div>
-        <div class="insight">
-          <h3>السبب المحتمل</h3>
-          <p>قد ترتبط الزيادة بزيادة ساعات التشغيل أو انخفاض كفاءة إحدى المعدات، لكن هذه الأسباب غير مؤكدة دون بيانات فعلية.</p>
-        </div>
-        <div class="insight">
-          <h3>الإجراء المقترح</h3>
-          <p>مقارنة قراءات الكهرباء وساعات التشغيل، ثم مراجعة حالة المعدات وجدول الصيانة قبل اتخاذ قرار.</p>
-        </div>
-      </div>
+      </section>
 
-      <div class="panel">
-        <h2>حساب التوفير الافتراضي</h2>
-        <p class="muted">أدخلي التكلفة الحالية ونسبة التوفير المفترضة لحساب تقدير توضيحي.</p>
-        <div class="form-grid" style="margin-top:17px">
-          <div class="field"><label for="current-cost">التكلفة الحالية شهريًا (ر.ع)</label><input id="current-cost" type="number" min="0" step="0.001" value="120"></div>
-          <div class="field"><label for="saving-rate">نسبة التوفير المفترضة (%)</label><input id="saving-rate" type="number" min="0" max="100" step="1" value="18"></div>
+      <section class="page" id="page-inventory">
+        <div class="section-heading"><div><h2>المخزون والمشتريات</h2><p>سجّلي الأصناف والكميات لمتابعة الاحتياجات.</p></div></div>
+        <div class="card">
+          <div class="panel-title">إضافة صنف للمخزون</div>
+          <form id="inventoryForm">
+            <div class="form-grid">
+              <div class="field"><label for="itemName">اسم الصنف</label><input id="itemName" required placeholder="اسم المادة أو القطعة"></div>
+              <div class="field"><label for="itemQty">الكمية</label><input id="itemQty" type="number" min="0" step="any" required placeholder="الكمية المتوفرة"></div>
+              <div class="field"><label for="itemMin">الحد الأدنى للتنبيه</label><input id="itemMin" type="number" min="0" step="any" value="5" required></div>
+              <div class="field"><label for="itemSupplier">المورد</label><input id="itemSupplier" placeholder="اسم المورد (اختياري)"></div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">إضافة الصنف</button></div>
+          </form>
         </div>
-        <div class="form-actions"><button class="btn" id="calculate-saving" type="button">احسب التقدير</button></div>
-        <div class="insight" id="saving-result" aria-live="polite">
-          <h3>التوفير المحتمل: 21.600 ر.ع شهريًا</h3>
-          <p>التكلفة بعد التوفير: 98.400 ر.ع شهريًا. هذا تقدير رياضي وليس ضمانًا لخفض الفاتورة.</p>
+        <div class="card" style="margin-top:16px">
+          <div class="panel-title">الأصناف المسجلة</div>
+          <div class="table-wrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>المورد</th><th>الحالة</th></tr></thead><tbody id="inventoryRows"></tbody></table></div>
+          <div class="empty" id="noInventory">لم تضيفي أصنافًا بعد.</div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="page" id="decisions">
-      <div class="page-heading"><div><h1>مركز القرار</h1><p class="muted">تنظيم التوصيات وتحويلها إلى إجراءات قابلة للمتابعة</p></div><span class="pill">نسخة تجريبية</span></div>
-
-      <div class="panel">
-        <h2>التوصيات المقترحة</h2>
-        <div class="insight">
-          <h3>01 — فحص المعدات</h3>
-          <p>راجعي سجل صيانة المعدات التي تعمل لساعات طويلة، وسجلي نتائج الفحص قبل تحديد الإجراء المناسب.</p>
-          <div class="form-actions"><button class="btn btn-small decision-btn" data-decision="فحص المعدات">تسجيل القرار</button></div>
+      <section class="page" id="page-employees">
+        <div class="section-heading"><div><h2>الموظفون والإنتاجية</h2><p>سجل تجريبي للفريق ومتابعة مؤشرات الإنتاجية.</p></div></div>
+        <div class="card">
+          <div class="panel-title">إضافة موظف</div>
+          <form id="employeeForm">
+            <div class="form-grid">
+              <div class="field"><label for="employeeName">اسم الموظف</label><input id="employeeName" required placeholder="الاسم"></div>
+              <div class="field"><label for="employeeRole">المسمى الوظيفي</label><input id="employeeRole" required placeholder="المسمى الوظيفي"></div>
+              <div class="field"><label for="employeeHours">ساعات العمل</label><input id="employeeHours" type="number" min="0" step="any" placeholder="عدد الساعات"></div>
+              <div class="field"><label for="employeeOutput">وصف الإنتاجية</label><input id="employeeOutput" placeholder="مثال: عدد المهام المنجزة"></div>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">إضافة الموظف</button></div>
+          </form>
         </div>
-        <div class="insight warning">
-          <h3>02 — مراجعة استهلاك الطاقة</h3>
-          <p>قارني فواتير الكهرباء وساعات التشغيل بين فترتين متماثلتين لتحديد إن كانت الزيادة فعلية.</p>
-          <div class="form-actions"><button class="btn btn-small decision-btn" data-decision="مراجعة استهلاك الطاقة">تسجيل القرار</button></div>
+        <div class="card" style="margin-top:16px">
+          <div class="panel-title">سجل الموظفين</div>
+          <div class="table-wrap"><table><thead><tr><th>الموظف</th><th>المسمى</th><th>ساعات العمل</th><th>الإنتاجية</th></tr></thead><tbody id="employeeRows"></tbody></table></div>
+          <div class="empty" id="noEmployees">لم تضيفي موظفين بعد.</div>
         </div>
-        <div class="insight">
-          <h3>03 — مراجعة المصروفات</h3>
-          <p>راجعي المصروفات المتكررة والمشتريات لتحديد فرص التوفير دون التأثير في جودة التشغيل.</p>
-          <div class="form-actions"><button class="btn btn-small decision-btn" data-decision="مراجعة المصروفات">تسجيل القرار</button></div>
+      </section>
+
+      <section class="page" id="page-insights">
+        <div class="section-heading"><div><h2>التحليلات الذكية</h2><p>مساحة لمراجعة المؤشرات وتحويلها إلى قرارات.</p></div></div>
+        <div class="card">
+          <div class="panel-title">كيف يعمل التحليل؟</div>
+          <div class="recommendation"><div class="rec-icon">①</div><div><div class="rec-title">جمع البيانات</div><div class="rec-desc">سجّلي المصروفات والقراءات التشغيلية وساعات تشغيل المعدات.</div></div></div>
+          <div class="recommendation"><div class="rec-icon">②</div><div><div class="rec-title">مقارنة الفترات</div><div class="rec-desc">قارني البيانات بفترات سابقة لتحديد التغيرات الملحوظة.</div></div></div>
+          <div class="recommendation"><div class="rec-icon">③</div><div><div class="rec-title">تقييم الأسباب المحتملة</div><div class="rec-desc">تحتاج معرفة السبب إلى بيانات كافية عن التشغيل والصيانة والعوامل الأخرى.</div></div></div>
+          <div class="recommendation"><div class="rec-icon">④</div><div><div class="rec-title">اقتراح قرار</div><div class="rec-desc">تقدير التوفير المتوقع ومراجعة النتيجة بعد تنفيذ التوصية.</div></div></div>
         </div>
-      </div>
+        <div class="notice">تنبيه: هذه النسخة لا تتضمن نموذج ذكاء اصطناعي فعليًا حتى الآن. التوصيات والأرقام في لوحة التحكم توضيحية، ولا تمثل تحليلًا حقيقيًا لبياناتك.</div>
+      </section>
 
-      <div class="panel">
-        <h2>سجل القرارات</h2>
-        <div id="decision-list"><p class="empty">لم تسجلي أي قرارات بعد.</p></div>
-      </div>
-    </section>
+      <section class="page" id="page-reports">
+        <div class="section-heading"><div><h2>التقارير</h2><p>ملخص العمليات التي تسجلينها في هذه النسخة.</p></div><button class="btn btn-outline" id="exportCsv">تصدير البيانات</button></div>
+        <div class="stats">
+          <div class="card"><div class="stat-label">عدد العمليات المالية</div><div class="stat-value" id="reportCount">0</div></div>
+          <div class="card"><div class="stat-label">عدد القراءات</div><div class="stat-value" id="reportReadings">0</div></div>
+          <div class="card"><div class="stat-label">عدد الأصناف</div><div class="stat-value" id="reportInventory">0</div></div>
+          <div class="card"><div class="stat-label">عدد الموظفين</div><div class="stat-value" id="reportEmployees">0</div></div>
+        </div>
+        <div class="notice">الأرقام التوضيحية في لوحة التحكم ليست بيانات فعلية. التقارير هنا تعتمد على ما تضيفينه في هذه النسخة التجريبية فقط.</div>
+      </section>
 
-    <div class="footer">قرار بلس QARAR PLUS · بياناتك .. قراراتك الأفضل</div>
+    </div>
   </main>
 </div>
 
 <script>
-  const pages = document.querySelectorAll(".page");
-  const navButtons = document.querySelectorAll(".nav-btn");
+  const $ = id => document.getElementById(id);
 
-  function showPage(id) {
-    pages.forEach(page => page.classList.toggle("active", page.id === id));
-    navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
+  const titles = {
+    dashboard: "لوحة التحكم",
+    management: "الإدارة والمالية",
+    engineering: "الهندسة والتشغيل",
+    inventory: "المخزون والمشتريات",
+    employees: "الموظفون والإنتاجية",
+    insights: "التحليلات الذكية",
+    reports: "التقارير"
+  };
+
+  const state = {
+    expenses: [],
+    readings: [],
+    inventory: [],
+    employees: []
+  };
+
+  function today() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  $("expenseDate").value = today();
+  $("readingDate").value = today();
+
+  function showPage(name) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    $("page-" + name).classList.add("active");
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
+    $("headerTitle").textContent = titles[name];
+    $("sidebar").classList.remove("open");
+    updateReports();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  navButtons.forEach(button => {
-    button.addEventListener("click", () => showPage(button.dataset.page));
+  document.querySelectorAll(".nav-btn").forEach(btn =>
+    btn.addEventListener("click", () => showPage(btn.dataset.page))
+  );
+
+  document.querySelectorAll("[data-go]").forEach(btn =>
+    btn.addEventListener("click", () => showPage(btn.dataset.go))
+  );
+
+  $("goReports").addEventListener("click", () => showPage("reports"));
+  $("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+
+  $("addExpenseTop").addEventListener("click", () => {
+    showPage("management");
+    $("expenseName").focus();
   });
 
-  document.querySelectorAll("[data-goto]").forEach(button => {
-    button.addEventListener("click", () => showPage(button.dataset.goto));
-  });
+  $("addExpensePage").addEventListener("click", () => $("expenseName").focus());
 
-  function readStore(key) {
-    try { return JSON.parse(localStorage.getItem(key) || "[]"); }
-    catch { return []; }
+  function safeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
   }
 
-  function writeStore(key, data) {
-    try {
-      localStorage.setItem(key, JSON.stringify(data));
-      return true;
-    } catch {
-      alert("تعذر الحفظ في هذا المتصفح.");
-      return false;
-    }
+  function money(value) {
+    return Number(value).toLocaleString("en-US", { maximumFractionDigits: 3 });
   }
-
-  const dateField = document.getElementById("expense-date");
-  dateField.value = new Date().toISOString().slice(0, 10);
 
   function renderExpenses() {
-    const rows = document.getElementById("expense-rows");
-    const expenses = readStore("qarar_expenses");
-    rows.replaceChildren();
+    const body = $("expenseRows");
+    body.innerHTML = state.expenses.map(x => `
+      <tr>
+        <td>${safeText(x.name)}</td>
+        <td><span class="tag">${x.type === "revenue" ? "إيراد" : "مصروف"}</span></td>
+        <td>${safeText(x.date)}</td>
+        <td>${money(x.amount)} ر.ع.</td>
+      </tr>
+    `).join("");
+    $("noExpenses").style.display = state.expenses.length ? "none" : "block";
 
-    if (!expenses.length) {
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 4;
-      td.className = "empty";
-      td.textContent = "لم تتم إضافة مصروفات بعد.";
-      tr.appendChild(td);
-      rows.appendChild(tr);
-      return;
-    }
-
-    expenses.forEach(item => {
-      const tr = document.createElement("tr");
-      [item.name, item.category, Number(item.amount).toFixed(3) + " ر.ع", item.date]
-        .forEach(value => {
-          const td = document.createElement("td");
-          td.textContent = value;
-          tr.appendChild(td);
-        });
-      rows.appendChild(tr);
-    });
+    const totalExpenses = state.expenses.filter(x => x.type === "expense").reduce((s,x) => s + x.amount, 720);
+    const totalRevenue = state.expenses.filter(x => x.type === "revenue").reduce((s,x) => s + x.amount, 1850);
+    $("expenseValue").innerHTML = `${money(totalExpenses)} <small style="font-size:12px">ر.ع.</small>`;
+    $("revenueValue").innerHTML = `${money(totalRevenue)} <small style="font-size:12px">ر.ع.</small>`;
   }
 
-  document.getElementById("expense-form").addEventListener("submit", event => {
-    event.preventDefault();
-    const expenses = readStore("qarar_expenses");
-    expenses.unshift({
-      name: document.getElementById("expense-name").value.trim(),
-      amount: Number(document.getElementById("expense-amount").value),
-      category: document.getElementById("expense-category").value,
-      date: dateField.value
+  $("expenseForm").addEventListener("submit", e => {
+    e.preventDefault();
+    state.expenses.push({
+      name: $("expenseName").value.trim(),
+      amount: Number($("expenseAmount").value),
+      type: $("expenseType").value,
+      date: $("expenseDate").value || today()
     });
-    if (writeStore("qarar_expenses", expenses)) {
-      event.target.reset();
-      dateField.value = new Date().toISOString().slice(0, 10);
-      renderExpenses();
-      alert("تم حفظ المصروف في هذا المتصفح.");
-    }
+    e.target.reset();
+    $("expenseDate").value = today();
+    renderExpenses();
+    updateReports();
+    alert("تمت إضافة العملية إلى النسخة التجريبية على هذا الجهاز.");
   });
 
-  document.getElementById("export-expenses").addEventListener("click", () => {
-    const expenses = readStore("qarar_expenses");
-    if (!expenses.length) {
-      alert("أضيفي مصروفًا واحدًا على الأقل قبل التصدير.");
-      return;
-    }
-    const quote = value => '"' + String(value).replace(/"/g, '""') + '"';
-    const csv = "\uFEFF" + [
-      ["المصروف", "التصنيف", "المبلغ (ر.ع)", "التاريخ"],
-      ...expenses.map(e => [e.name, e.category, e.amount, e.date])
-    ].map(row => row.map(quote).join(",")).join("\r\n");
-    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "qarar-plus-expenses.csv";
-    link.click();
+  $("engineeringForm").addEventListener("submit", e => {
+    e.preventDefault();
+    state.readings.push({
+      type: $("readingType").value,
+      value: Number($("readingValue").value),
+      equipment: $("equipmentName").value.trim() || "غير محدد",
+      date: $("readingDate").value || today(),
+      notes: $("readingNotes").value.trim()
+    });
+    e.target.reset();
+    $("readingDate").value = today();
+    renderReadings();
+    updateReports();
+    alert("تم حفظ القراءة على هذا الجهاز.");
+  });
+
+  function renderReadings() {
+    $("readingRows").innerHTML = state.readings.map(x => `
+      <tr><td>${safeText(x.type)}</td><td>${safeText(x.equipment)}</td><td>${safeText(x.value)}</td><td>${safeText(x.date)}</td></tr>
+    `).join("");
+    $("noReadings").style.display = state.readings.length ? "none" : "block";
+  }
+
+  $("inventoryForm").addEventListener("submit", e => {
+    e.preventDefault();
+    state.inventory.push({
+      name: $("itemName").value.trim(),
+      qty: Number($("itemQty").value),
+      min: Number($("itemMin").value),
+      supplier: $("itemSupplier").value.trim() || "غير محدد"
+    });
+    e.target.reset();
+    $("itemMin").value = 5;
+    renderInventory();
+    updateReports();
+    alert("تمت إضافة الصنف.");
+  });
+
+  function renderInventory() {
+    $("inventoryRows").innerHTML = state.inventory.map(x => `
+      <tr><td>${safeText(x.name)}</td><td>${safeText(x.qty)}</td><td>${safeText(x.supplier)}</td>
+      <td>${x.qty <= x.min ? '<span class="tag" style="background:#ffedef;color:#d95362">يحتاج مراجعة</span>' : '<span class="tag">متوفر</span>'}</td></tr>
+    `).join("");
+    $("noInventory").style.display = state.inventory.length ? "none" : "block";
+  }
+
+  $("employeeForm").addEventListener("submit", e => {
+    e.preventDefault();
+    state.employees.push({
+      name: $("employeeName").value.trim(),
+      role: $("employeeRole").value.trim(),
+      hours: $("employeeHours").value || "—",
+      output: $("employeeOutput").value.trim() || "—"
+    });
+    e.target.reset();
+    renderEmployees();
+    updateReports();
+    alert("تمت إضافة الموظف إلى السجل التجريبي.");
+  });
+
+  function renderEmployees() {
+    $("employeeRows").innerHTML = state.employees.map(x => `
+      <tr><td>${safeText(x.name)}</td><td>${safeText(x.role)}</td><td>${safeText(x.hours)}</td><td>${safeText(x.output)}</td></tr>
+    `).join("");
+    $("noEmployees").style.display = state.employees.length ? "none" : "block";
+  }
+
+  function updateReports() {
+    $("reportCount").textContent = state.expenses.length;
+    $("reportReadings").textContent = state.readings.length;
+    $("reportInventory").textContent = state.inventory.length;
+    $("reportEmployees").textContent = state.employees.length;
+  }
+
+  $("exportCsv").addEventListener("click", () => {
+    const rows = [["النوع","الاسم","القيمة","التاريخ"]];
+    state.expenses.forEach(x => rows.push([x.type === "revenue" ? "إيراد" : "مصروف",x.name,x.amount,x.date]));
+    state.readings.forEach(x => rows.push(["قراءة: " + x.type,x.equipment,x.value,x.date]));
+    state.inventory.forEach(x => rows.push(["مخزون: " + x.name,x.supplier,x.qty,""]));
+    state.employees.forEach(x => rows.push(["موظف: " + x.name,x.role,x.hours,x.output]));
+
+    const csv = "\uFEFF" + rows.map(row =>
+      row.map(v => '"' + String(v ?? "").replace(/"/g,'""') + '"').join(",")
+    ).join("\r\n");
+
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "qarar-plus-report.csv";
+    a.click();
     URL.revokeObjectURL(url);
   });
 
-  function renderOperations() {
-    const container = document.getElementById("operation-list");
-    container.replaceChildren();
-    readStore("qarar_operations").forEach(item => {
-      const div = document.createElement("div");
-      div.className = "insight";
-      const title = document.createElement("h3");
-      title.textContent = item.machine + " — " + item.type;
-      const note = document.createElement("p");
-      note.textContent = item.note;
-      div.append(title, note);
-      container.appendChild(div);
-    });
-  }
-
-  document.getElementById("operation-form").addEventListener("submit", event => {
-    event.preventDefault();
-    const items = readStore("qarar_operations");
-    items.unshift({
-      machine: document.getElementById("machine").value.trim(),
-      type: document.getElementById("operation-type").value,
-      note: document.getElementById("operation-note").value.trim()
-    });
-    if (writeStore("qarar_operations", items)) {
-      event.target.reset();
-      renderOperations();
-      alert("تم حفظ الملاحظة في هذا المتصفح.");
-    }
-  });
-
-  document.getElementById("calculate-saving").addEventListener("click", () => {
-    const cost = Number(document.getElementById("current-cost").value);
-    const rate = Number(document.getElementById("saving-rate").value);
-    const result = document.getElementById("saving-result");
-
-    if (!Number.isFinite(cost) || cost < 0 ||
-        !Number.isFinite(rate) || rate < 0 || rate > 100) {
-      alert("أدخلي تكلفة صحيحة ونسبة بين 0 و100.");
-      return;
-    }
-
-    const saving = cost * rate / 100;
-    const after = cost - saving;
-    result.replaceChildren();
-
-    const heading = document.createElement("h3");
-    heading.textContent = "التوفير المحتمل: " + saving.toFixed(3) + " ر.ع شهريًا";
-    const paragraph = document.createElement("p");
-    paragraph.textContent = "التكلفة بعد التوفير: " + after.toFixed(3) +
-      " ر.ع شهريًا. هذا تقدير رياضي وليس ضمانًا لخفض الفاتورة.";
-    result.append(heading, paragraph);
-  });
-
-  function renderDecisions() {
-    const container = document.getElementById("decision-list");
-    container.replaceChildren();
-    const decisions = readStore("qarar_decisions");
-
-    if (!decisions.length) {
-      const p = document.createElement("p");
-      p.className = "empty";
-      p.textContent = "لم تسجلي أي قرارات بعد.";
-      container.appendChild(p);
-      return;
-    }
-
-    decisions.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "insight";
-      const h = document.createElement("h3");
-      h.textContent = item;
-      const p = document.createElement("p");
-      p.textContent = "تم تسجيل القرار في هذا المتصفح.";
-      div.append(h, p);
-      container.appendChild(div);
-    });
-  }
-
-  document.querySelectorAll(".decision-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      const decisions = readStore("qarar_decisions");
-      decisions.unshift(button.dataset.decision);
-      if (writeStore("qarar_decisions", decisions)) {
-        renderDecisions();
-        alert("تم تسجيل القرار.");
-      }
-    });
-  });
-
-  renderExpenses();
-  renderOperations();
-  renderDecisions();
+  updateReports();
 
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js").catch(error => {
-        console.log("تعذر تسجيل Service Worker:", error);
+      navigator.serviceWorker.register("./service-worker.js").catch(err => {
+        console.error("Service worker registration failed:", err);
       });
     });
   }

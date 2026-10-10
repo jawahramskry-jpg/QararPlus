@@ -1,12 +1,28 @@
+
 {
   "name": "قرار بلس",
   "short_name": "قرار بلس",
   "description": "نظام ذكي لإدارة وتحسين أداء الشركات",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f4f6fb",
-  "theme_color": "#172554",
+  "theme_color": "#153963",
   "orientation": "portrait",
   "lang": "ar",
-  "dir": "rtl"
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "./logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
 }
